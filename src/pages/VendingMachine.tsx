@@ -104,7 +104,7 @@ export default function VendingMachine() {
   const categories = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
   return (
-    <div className="relative z-10 max-w-[660px] mx-auto px-5 pb-24 pt-10">
+    <div className="relative z-10 max-w-7xl mx-auto px-5 pb-24 pt-10">
       {/* Background Image with Shaded Filter */}
       <div className="fixed inset-0 z-[-1] pointer-events-none">
         <img 
@@ -116,8 +116,49 @@ export default function VendingMachine() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#050505]/80 to-[#050505]/95" />
       </div>
 
-      {/* Header */}
-      <header className="mb-8">
+      <div className="flex flex-col lg:flex-row gap-12 items-start justify-center">
+        {/* Left Image Container */}
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="hidden lg:block sticky top-10 w-[380px] flex-shrink-0"
+        >
+          <div className="relative group overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 aspect-[4/5] shadow-2xl">
+            <img 
+              src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/6147295f35b54983a3fcde7478de7fab6938d33c127946a3ba916cf9888bdd2d.png" 
+              alt="Zetsu Character" 
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              referrerPolicy="no-referrer"
+            />
+            {/* Decorative Overlays */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60" />
+            <div className="absolute inset-0 border-[1px] border-white/5 rounded-[2.5rem] pointer-events-none" />
+            
+            {/* Technical Labels */}
+            <div className="absolute top-8 left-8">
+              <div className="font-mono text-[10px] text-accent uppercase tracking-[0.3em] font-bold mb-1">Operator Status</div>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                <div className="font-mono text-[9px] text-white/60 uppercase tracking-widest">Active / Synced</div>
+              </div>
+            </div>
+
+            <div className="absolute bottom-8 left-8 right-8">
+              <div className="font-mono text-[10px] text-white/40 uppercase tracking-[0.4em] mb-2">Zetsu Systems</div>
+              <div className="font-display text-3xl text-white tracking-tight leading-none group-hover:text-accent transition-colors">
+                Atomic <br /> Guardian
+              </div>
+            </div>
+
+            {/* Scanline effect on image */}
+            <div className="absolute inset-0 pointer-events-none opacity-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
+          </div>
+        </motion.div>
+
+        {/* Vending Machine Content */}
+        <div className="w-full max-w-[660px]">
+          {/* Header */}
+          <header className="mb-8">
         <div className="flex items-center justify-between mb-6">
           <Link to="/" className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 font-mono text-[10px] uppercase tracking-widest text-muted hover:bg-white/10 hover:text-white transition-all">
             Home
@@ -239,6 +280,9 @@ export default function VendingMachine() {
           />
         )}
       </AnimatePresence>
+
+      </div>
+      </div>
 
       {/* Scanline Effect Overlay */}
       <div className="fixed inset-0 pointer-events-none scanline opacity-20" />
