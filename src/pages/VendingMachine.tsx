@@ -4,6 +4,7 @@ import { ArrowUp, Sparkles, X, Copy, Check, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SODA_DATA, SodaCan, Category } from '../types';
 import { PromptModal } from '../components/PromptModal';
+import { Footer } from '../components/Footer';
 import { generateSodaImage } from '../services/gemini';
 
 const SodaCard = ({ can, index, onClick }: { can: SodaCan; index: number; onClick: () => void; key?: React.Key }) => {
@@ -241,6 +242,10 @@ export default function VendingMachine() {
 
       {/* Scanline Effect Overlay */}
       <div className="fixed inset-0 pointer-events-none scanline opacity-20" />
+
+      <div className="mt-20 -mx-5">
+        <Footer />
+      </div>
     </div>
   );
 }

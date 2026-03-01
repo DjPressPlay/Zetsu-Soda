@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Loader2, Sparkles } from 'lucide-react';
 import { PromptModal } from '../components/PromptModal';
+import { Footer } from '../components/Footer';
 import { SodaCan } from '../types';
 
 export default function SharedCan() {
@@ -97,6 +98,10 @@ export default function SharedCan() {
 
       {/* Scanline Effect */}
       <div className="fixed inset-0 pointer-events-none scanline opacity-5" />
+
+      <div className="w-full mt-24">
+        <Footer />
+      </div>
     </div>
   );
 }

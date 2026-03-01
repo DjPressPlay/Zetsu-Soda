@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Sparkles, Zap, Box, Layers, ArrowRight, Loader2 } from 'lucide-react';
 import { SODA_DATA, SodaCan } from '../types';
 import { PromptModal } from '../components/PromptModal';
+import { Footer } from '../components/Footer';
 
 export default function Home() {
   const [isDispensing, setIsDispensing] = useState(false);
@@ -279,6 +280,8 @@ export default function Home() {
 
       {/* Scanline Effect */}
       <div className="fixed inset-0 pointer-events-none scanline opacity-5" />
+      
+      <Footer />
       
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes glare {
