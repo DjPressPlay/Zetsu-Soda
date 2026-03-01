@@ -47,3 +47,22 @@ export async function generateSodaImage(canName: string, category: string) {
   }
   return null;
 }
+
+export async function remixSodaPrompt(currentPrompt: string) {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `Remix the following AI component prompt to be a slightly different but still atomic and functional version. Keep it concise and in a similar style.
+      
+      Current Prompt: ${currentPrompt}`,
+      config: {
+        systemInstruction: "You are a creative component designer. Your goal is to provide a fresh, slightly modified version of an existing component prompt while keeping it functional and atomic.",
+      },
+    });
+
+    return response.text || currentPrompt;
+  } catch (error) {
+    console.error("Error remixing prompt:", error);
+    return currentPrompt;
+  }
+}

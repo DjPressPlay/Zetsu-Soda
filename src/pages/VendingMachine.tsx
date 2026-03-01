@@ -3,23 +3,24 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUp, Sparkles, X, Copy, Check, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SODA_DATA, SodaCan, Category } from '../types';
+import { PromptModal } from '../components/PromptModal';
 import { generateSodaImage } from '../services/gemini';
 
-const RarityTag = ({ rarity }: { rarity: SodaCan['rarity'] }) => {
-  const styles = {
-    Common: 'bg-muted/20 text-muted',
-    Rare: 'bg-accent-purple/20 text-[#b08aff]',
-    Epic: 'bg-accent-pink/20 text-[#ff8aaa]',
+const SodaCard = ({ can, index, onClick }: { can: SodaCan; index: number; onClick: () => void; key?: React.Key }) => {
+  const RarityTag = ({ rarity }: { rarity: SodaCan['rarity'] }) => {
+    const styles = {
+      Common: 'bg-muted/20 text-muted',
+      Rare: 'bg-accent-purple/20 text-[#b08aff]',
+      Epic: 'bg-accent-pink/20 text-[#ff8aaa]',
+    };
+
+    return (
+      <span className={`font-mono text-[8px] tracking-wider px-2 py-0.5 rounded-full uppercase ${styles[rarity]}`}>
+        {rarity}
+      </span>
+    );
   };
 
-  return (
-    <span className={`font-mono text-[8px] tracking-wider px-2 py-0.5 rounded-full uppercase ${styles[rarity]}`}>
-      {rarity}
-    </span>
-  );
-};
-
-const SodaCard = ({ can, index, onClick }: { can: SodaCan; index: number; onClick: () => void; key?: React.Key }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -70,125 +71,28 @@ const CategorySection = ({ category, onCanClick }: { category: Category; onCanCl
   );
 };
 
-const PromptModal = ({ can, onClose }: { can: SodaCan; onClose: () => void }) => {
-  const [copied, setCopied] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [loadingImage, setLoadingImage] = useState(true);
-
-  useEffect(() => {
-    const loadImage = async () => {
-      setLoadingImage(true);
-      const url = await generateSodaImage(can.name, can.category);
-      setImageUrl(url);
-      setLoadingImage(false);
-    };
-    loadImage();
-  }, [can]);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(can.prompt);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-bg/80 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        className="bg-card border border-accent/20 rounded-3xl w-full max-w-sm overflow-hidden shadow-[0_32px_64px_rgba(0,0,0,0.8)] max-h-[90vh] flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="p-4 border-b border-border flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-gradient-to-br ${
-              can.category === 'analytics' ? 'from-[#0a1628] to-[#0d3060]' :
-              can.category === 'automation' ? 'from-[#150a28] to-[#3b0d7a]' :
-              can.category === 'apps' ? 'from-[#0a2010] to-[#0d5030]' :
-              'from-[#1a0a00] to-[#4d2000]'
-            }`}>
-              {can.icon}
-            </div>
-            <div>
-              <h3 className="font-display text-xl text-white tracking-wide leading-tight">{can.name}</h3>
-              <RarityTag rarity={can.rarity} />
-            </div>
-          </div>
-          <button 
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-muted hover:bg-white/10 hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="relative aspect-square bg-black/20 overflow-hidden flex-shrink-0">
-          {loadingImage ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-              <Loader2 className="w-6 h-6 text-accent animate-spin" />
-              <span className="font-mono text-[8px] text-muted uppercase tracking-widest">Generating Atomic Can...</span>
-            </div>
-          ) : imageUrl ? (
-            <motion.img 
-              initial={{ opacity: 0, scale: 1.1 }}
-              animate={{ opacity: 1, scale: 1 }}
-              src={imageUrl} 
-              alt={can.name}
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-muted font-mono text-[10px]">
-              Failed to generate image
-            </div>
-          )}
-        </div>
-
-        <div className="p-6 overflow-y-auto custom-scrollbar">
-          <div className="font-mono text-[9px] tracking-[0.2em] text-accent uppercase mb-3">Simplified Prompt</div>
-          <div className="bg-black/40 border border-border rounded-xl p-4 relative group">
-            <p className="text-xs text-muted leading-relaxed font-mono">
-              {can.prompt}
-            </p>
-            <button 
-              onClick={handleCopy}
-              className="absolute top-3 right-3 p-1.5 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
-            >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
-          </div>
-          
-          <div className="mt-6 flex items-center gap-2.5 text-muted">
-            <Sparkles className="w-3.5 h-3.5 text-accent" />
-            <span className="text-[10px] font-mono uppercase tracking-widest">Paste this into AI Studio to build</span>
-          </div>
-        </div>
-
-        <div className="p-3 bg-accent/5 flex justify-center border-t border-border">
-          <button 
-            onClick={onClose}
-            className="font-display text-base text-accent tracking-widest hover:opacity-80 transition-opacity"
-          >
-            CLOSE CAN
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
 export default function VendingMachine() {
   const [trashLevel, setTrashLevel] = useState(6);
   const [selectedCan, setSelectedCan] = useState<SodaCan | null>(null);
   const [activeCategory, setActiveCategory] = useState('A');
+  const [imageState, setImageState] = useState<Record<string, { url: string | null; loading: boolean }>>({});
   const maxTrash = 10;
+
+  const handleCanClick = async (can: SodaCan) => {
+    setSelectedCan(can);
+    
+    // Start generating image immediately if not already generating/generated
+    if (!imageState[can.id]) {
+      setImageState(prev => ({ ...prev, [can.id]: { url: null, loading: true } }));
+      try {
+        const url = await generateSodaImage(can.name, can.category);
+        setImageState(prev => ({ ...prev, [can.id]: { url, loading: false } }));
+      } catch (error) {
+        console.error("Failed to pre-generate image:", error);
+        setImageState(prev => ({ ...prev, [can.id]: { url: null, loading: false } }));
+      }
+    }
+  };
 
   const categories = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
@@ -269,7 +173,7 @@ export default function VendingMachine() {
             <CategorySection 
               key={category.id} 
               category={category} 
-              onCanClick={(can) => setSelectedCan(can)}
+              onCanClick={handleCanClick}
             />
           ))
         ) : (
@@ -287,7 +191,7 @@ export default function VendingMachine() {
         onClick={() => {
           const allCans = SODA_DATA.flatMap(c => c.cans);
           const randomCan = allCans[Math.floor(Math.random() * allCans.length)];
-          setSelectedCan(randomCan);
+          handleCanClick(randomCan);
         }}
         className="mt-10 bg-gradient-to-br from-accent/10 to-accent-purple/10 border border-accent/20 rounded-2xl p-6 flex items-center justify-between cursor-pointer group transition-all hover:from-accent/15 hover:to-accent-purple/15 hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
       >
@@ -304,6 +208,8 @@ export default function VendingMachine() {
           <PromptModal 
             can={selectedCan} 
             onClose={() => setSelectedCan(null)} 
+            pregeneratedImage={imageState[selectedCan.id]?.url}
+            isPregenerating={imageState[selectedCan.id]?.loading}
           />
         )}
       </AnimatePresence>
