@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Bebas Neue", sans-serif;
+
+  --color-bg: #06060b;
+  --color-card: #0f0f18;
+  --color-card-hover: #141420;
+  --color-accent: #00ffc8;
+  --color-accent-pink: #ff3c6e;
+  --color-accent-purple: #8b5cf6;
+  --color-muted: #5a5a72;
+  --color-muted-dark: #3a3a52;
+  --color-border: rgba(255, 255, 255, 0.06);
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-white font-sans min-h-screen selection:bg-accent/30;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 55% 35% at 85% 5%, rgba(139, 92, 246, 0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 25% at 5% 90%, rgba(0, 255, 200, 0.07) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+.gline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-accent-purple) 30%, var(--color-accent) 65%, transparent 100%);
+  opacity: 0.35;
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scanline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 255, 200, 0.05), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
