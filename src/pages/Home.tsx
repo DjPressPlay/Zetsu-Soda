@@ -32,6 +32,17 @@ export default function Home() {
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-12 overflow-hidden bg-[#050505]">
+      {/* Background Image with Shaded Filter */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img 
+          src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/599fab27309e4be9a9519b44f42a5ef417c7d10ace9b400a91dd9e9ae68c3909.png" 
+          alt="Background" 
+          className="w-full h-full object-cover opacity-25 grayscale-[0.2]"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/90 via-[#050505]/60 to-[#050505]/90" />
+      </div>
+
       {/* Background Glow */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-accent/5 rounded-full blur-[200px] pointer-events-none" />
 
@@ -78,6 +89,12 @@ export default function Home() {
           {/* Top Marquee */}
           <div className="h-20 bg-[#0a0a0a] border-b border-white/5 flex flex-col items-center justify-center px-6 relative z-10 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-accent/10 to-transparent" />
+            <img 
+              src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/fe37336d620b48e89ab983bb2f2611f2334f992500b64382b9b4aec650f9a531.png" 
+              alt="Zetsu Logo" 
+              className="absolute left-4 w-12 h-12 object-contain opacity-20 pointer-events-none"
+              referrerPolicy="no-referrer"
+            />
             <motion.div 
               animate={{ opacity: [0.8, 1, 0.8] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -235,8 +252,14 @@ export default function Home() {
             transition={{ delay: 0.5 + i * 0.1 }}
             className="p-8 rounded-[32px] bg-gradient-to-b from-[#111] to-[#080808] border border-white/5 flex flex-col items-center text-center group hover:border-accent/30 transition-all shadow-2xl"
           >
-            <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 border border-accent/20 group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(0,255,200,0.1)]">
-              <item.icon className="w-7 h-7 text-accent" />
+            <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 border border-accent/20 group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(0,255,200,0.1)] relative overflow-hidden">
+              <img 
+                src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/fe37336d620b48e89ab983bb2f2611f2334f992500b64382b9b4aec650f9a531.png" 
+                alt="Zetsu Logo" 
+                className="absolute inset-0 w-full h-full object-contain opacity-10 pointer-events-none"
+                referrerPolicy="no-referrer"
+              />
+              <item.icon className="w-7 h-7 text-accent relative z-10" />
             </div>
             <h3 className="font-display text-xl text-white mb-3 tracking-widest uppercase">{item.title}</h3>
             <p className="text-muted text-sm leading-relaxed font-medium">{item.desc}</p>

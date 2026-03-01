@@ -160,8 +160,14 @@ export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating }
       >
         <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-gradient-to-br from-accent/20 to-accent-purple/20">
-              {can.icon}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg relative overflow-hidden bg-gradient-to-br from-accent/20 to-accent-purple/20">
+              <img 
+                src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/fe37336d620b48e89ab983bb2f2611f2334f992500b64382b9b4aec650f9a531.png" 
+                alt="Zetsu Logo" 
+                className="absolute inset-0 w-full h-full object-contain opacity-10 pointer-events-none"
+                referrerPolicy="no-referrer"
+              />
+              <span className="relative z-10">{can.icon}</span>
             </div>
             <div>
               <h3 className="font-display text-xl text-white tracking-wide leading-tight">{can.name}</h3>
@@ -236,7 +242,7 @@ export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating }
         <div className="p-6 overflow-y-auto custom-scrollbar">
           <div className="font-mono text-[9px] tracking-[0.2em] text-white uppercase mb-3">Simplified Prompt</div>
           <div className="bg-black/40 border border-border rounded-xl p-4 relative group">
-            <p className="text-xs text-muted leading-relaxed font-mono">
+            <p className="text-xs text-white leading-relaxed font-mono">
               {isRemixing ? "Remixing prompt..." : currentPrompt}
             </p>
             <button 
@@ -247,7 +253,7 @@ export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating }
             </button>
           </div>
           
-          <div className="mt-6 flex items-center gap-2.5 text-muted">
+          <div className="mt-6 flex items-center gap-2.5 text-white/60">
             <Sparkles className="w-3.5 h-3.5 text-accent" />
             <span className="text-[10px] font-mono uppercase tracking-widest">Paste this into AI Studio to build</span>
           </div>

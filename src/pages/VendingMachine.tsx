@@ -30,18 +30,24 @@ const SodaCard = ({ can, index, onClick }: { can: SodaCan; index: number; onClic
       onClick={onClick}
       className="group relative bg-card border border-border rounded-2xl p-3.5 flex items-center gap-4 cursor-pointer transition-all hover:bg-card-hover hover:border-accent/20 hover:shadow-[0_8px_32px_rgba(0,0,0,0.45),0_0_0_1px_rgba(0,255,200,0.08)]"
     >
-      <div className={`w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center text-2xl bg-gradient-to-br ${
+      <div className={`w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center text-2xl relative overflow-hidden bg-gradient-to-br ${
         can.category === 'analytics' ? 'from-[#0a1628] to-[#0d3060]' :
         can.category === 'automation' ? 'from-[#150a28] to-[#3b0d7a]' :
         can.category === 'apps' ? 'from-[#0a2010] to-[#0d5030]' :
         'from-[#1a0a00] to-[#4d2000]'
       }`}>
-        {can.icon}
+        <img 
+          src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/fe37336d620b48e89ab983bb2f2611f2334f992500b64382b9b4aec650f9a531.png" 
+          alt="Zetsu Logo" 
+          className="absolute inset-0 w-full h-full object-contain opacity-10 pointer-events-none"
+          referrerPolicy="no-referrer"
+        />
+        <span className="relative z-10">{can.icon}</span>
       </div>
       
       <div className="flex-1 min-w-0">
         <h3 className="text-[14.5px] font-medium text-white leading-tight mb-1">{can.name}</h3>
-        <p className="text-[11.5px] text-muted leading-relaxed truncate">{can.description}</p>
+        <p className="text-[11.5px] text-white/70 leading-relaxed truncate">{can.description}</p>
         <div className="flex gap-1.5 mt-1.5">
           <RarityTag rarity={can.rarity} />
         </div>
@@ -59,8 +65,8 @@ const CategorySection = ({ category, onCanClick }: { category: Category; onCanCl
     <section className="mb-10">
       <div className="flex items-center gap-2.5 mb-4">
         <span className="text-base">{category.icon}</span>
-        <h2 className="font-mono text-[10px] tracking-[0.18em] text-muted uppercase">{category.name}</h2>
-        <span className="font-mono text-[9px] text-muted-dark ml-auto">{category.cans.length} cans</span>
+        <h2 className="font-mono text-[10px] tracking-[0.18em] text-white/80 uppercase">{category.name}</h2>
+        <span className="font-mono text-[9px] text-white/40 ml-auto">{category.cans.length} cans</span>
       </div>
       <div className="flex flex-col gap-2.5">
         {category.cans.map((can, idx) => (
@@ -98,6 +104,17 @@ export default function VendingMachine() {
 
   return (
     <div className="relative z-10 max-w-[660px] mx-auto px-5 pb-24 pt-10">
+      {/* Background Image with Shaded Filter */}
+      <div className="fixed inset-0 z-[-1] pointer-events-none">
+        <img 
+          src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/599fab27309e4be9a9519b44f42a5ef417c7d10ace9b400a91dd9e9ae68c3909.png" 
+          alt="Background" 
+          className="w-full h-full object-cover opacity-40 grayscale-[0.5]"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#050505]/80 to-[#050505]/95" />
+      </div>
+
       {/* Header */}
       <header className="mb-8">
         <div className="flex items-center justify-between mb-6">
@@ -111,11 +128,19 @@ export default function VendingMachine() {
         </div>
 
         <div className="flex items-end justify-between mb-6">
-          <div>
-            <div className="font-mono text-[9px] tracking-[0.22em] text-accent uppercase mb-1">⚡ Zetsu Soda</div>
-            <h1 className="font-display text-6xl tracking-wider leading-none bg-gradient-to-br from-white to-accent bg-clip-text text-transparent">
-              Atomic
-            </h1>
+          <div className="flex items-center gap-4">
+            <img 
+              src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/fe37336d620b48e89ab983bb2f2611f2334f992500b64382b9b4aec650f9a531.png" 
+              alt="Zetsu Soda Logo" 
+              className="w-16 h-16 object-contain"
+              referrerPolicy="no-referrer"
+            />
+            <div>
+              <div className="font-mono text-[9px] tracking-[0.22em] text-accent uppercase mb-1">⚡ Zetsu Soda</div>
+              <h1 className="font-display text-6xl tracking-wider leading-none bg-gradient-to-br from-white to-accent bg-clip-text text-transparent">
+                Atomic
+              </h1>
+            </div>
           </div>
         </div>
 
