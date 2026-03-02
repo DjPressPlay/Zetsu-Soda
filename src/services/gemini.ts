@@ -2,7 +2,20 @@ import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
+const imageCache: Record<string, string | null> = {};
+const pendingRequests: Record<string, Promise<string | null>> = {};
+
 export async function generateSodaImage(canName: string, category: string) {
+  const cacheKey = `${canName}-${category}`;
+  
+  if (imageCache[cacheKey]) {
+    return imageCache[cacheKey];
+  }
+
+  if (pendingRequests[cacheKey]) {
+    return pendingRequests[cacheKey];
+  }
+
   const colorThemes: Record<string, string> = {
     analytics: "Electric Blue and Cyan",
     automation: "Deep Purple and Neon Violet",
@@ -23,29 +36,38 @@ export async function generateSodaImage(canName: string, category: string) {
   The overall aesthetic is energetic, premium, and futuristic. 
   This specific flavor is called '${canName}'.`;
 
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-image",
-      contents: {
-        parts: [{ text: prompt }],
-      },
-      config: {
-        imageConfig: {
-          aspectRatio: "3:4",
+  const request = (async () => {
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash-image",
+        contents: {
+          parts: [{ text: prompt }],
         },
-      },
-    });
+        config: {
+          imageConfig: {
+            aspectRatio: "3:4",
+          },
+        },
+      });
 
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
+      for (const part of response.candidates?.[0]?.content?.parts || []) {
+        if (part.inlineData) {
+          const url = `data:image/png;base64,${part.inlineData.data}`;
+          imageCache[cacheKey] = url;
+          return url;
+        }
       }
+    } catch (error) {
+      console.error("Error generating image:", error);
+      return null;
+    } finally {
+      delete pendingRequests[cacheKey];
     }
-  } catch (error) {
-    console.error("Error generating image:", error);
     return null;
-  }
-  return null;
+  })();
+
+  pendingRequests[cacheKey] = request;
+  return request;
 }
 
 export async function remixSodaPrompt(currentPrompt: string) {

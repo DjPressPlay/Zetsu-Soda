@@ -277,6 +277,9 @@ export default function VendingMachine() {
             onClose={() => setSelectedCan(null)} 
             pregeneratedImage={imageState[selectedCan.id]?.url}
             isPregenerating={imageState[selectedCan.id]?.loading}
+            onImageGenerated={(url) => {
+              setImageState(prev => ({ ...prev, [selectedCan.id]: { url, loading: false } }));
+            }}
           />
         )}
       </AnimatePresence>

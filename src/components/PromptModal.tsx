@@ -11,6 +11,7 @@ interface PromptModalProps {
   onClose: () => void;
   pregeneratedImage?: string | null;
   isPregenerating?: boolean;
+  onImageGenerated?: (url: string) => void;
 }
 
 const RarityTag = ({ rarity }: { rarity: SodaCan['rarity'] }) => {
@@ -27,10 +28,14 @@ const RarityTag = ({ rarity }: { rarity: SodaCan['rarity'] }) => {
   );
 };
 
-export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating }: PromptModalProps) => {
+export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating, onImageGenerated }: PromptModalProps) => {
   const [copied, setCopied] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(pregeneratedImage || null);
-  const [loadingImage, setLoadingImage] = useState(isPregenerating ?? true);
+  const [imageUrl, setImageUrl] = useState<string | null>(pregeneratedImage || can.imageUrl || null);
+  const [loadingImage, setLoadingImage] = useState(() => {
+    if (pregeneratedImage || can.imageUrl) return false;
+    if (isPregenerating) return true;
+    return true;
+  });
   const [isShaking, setIsShaking] = useState(false);
   const [currentPrompt, setCurrentPrompt] = useState(can.prompt);
   const [isRemixing, setIsRemixing] = useState(false);
@@ -44,26 +49,46 @@ export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating }
   const exportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only generate if we don't have a pre-generated image and aren't already loading one from props
-    if (pregeneratedImage) {
-      setImageUrl(pregeneratedImage);
+    // 1. If we already have an image in the local state, we're good.
+    if (imageUrl) {
       setLoadingImage(false);
       return;
     }
 
+    // 2. If the can prop or pregenerated prop already has an image, use it.
+    const existingUrl = can.imageUrl || pregeneratedImage;
+    if (existingUrl) {
+      setImageUrl(existingUrl);
+      setLoadingImage(false);
+      return;
+    }
+
+    // 3. If we're already pre-generating in the parent, wait for it.
     if (isPregenerating) {
       setLoadingImage(true);
       return;
     }
 
+    // 4. Only load if we really have to.
+    let isMounted = true;
     const loadImage = async () => {
       setLoadingImage(true);
-      const url = await generateSodaImage(can.name, can.category);
-      setImageUrl(url);
-      setLoadingImage(false);
+      try {
+        const url = await generateSodaImage(can.name, can.category);
+        if (isMounted && url) {
+          setImageUrl(url);
+          setLoadingImage(false);
+          onImageGenerated?.(url);
+        }
+      } catch (error) {
+        console.error("Failed to load soda image:", error);
+        if (isMounted) setLoadingImage(false);
+      }
     };
+
     loadImage();
-  }, [can, pregeneratedImage, isPregenerating]);
+    return () => { isMounted = false; };
+  }, [can.id, can.name, can.category, can.imageUrl, pregeneratedImage, isPregenerating, onImageGenerated, imageUrl]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(currentPrompt);

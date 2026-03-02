@@ -6,6 +6,7 @@ export interface SodaCan {
   rarity: 'Common' | 'Rare' | 'Epic';
   category: string;
   prompt: string;
+  imageUrl?: string | null;
 }
 
 export interface Category {

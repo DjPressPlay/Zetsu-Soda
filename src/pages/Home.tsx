@@ -25,11 +25,15 @@ export default function Home() {
     const randomCan = allCans[Math.floor(Math.random() * allCans.length)];
 
     setTimeout(() => {
-      setDispensedCan(randomCan);
+      setDispensedCan({ ...randomCan });
       setIsDispensing(false);
       setTimeout(() => setShowModal(true), 800);
     }, 2000);
   };
+
+  const handleImageGenerated = React.useCallback((url: string) => {
+    setDispensedCan(prev => prev ? { ...prev, imageUrl: url } : null);
+  }, []);
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-12 overflow-hidden bg-[#050505]">
@@ -274,6 +278,7 @@ export default function Home() {
           <PromptModal 
             can={dispensedCan} 
             onClose={() => setShowModal(false)} 
+            onImageGenerated={handleImageGenerated}
           />
         )}
       </AnimatePresence>
