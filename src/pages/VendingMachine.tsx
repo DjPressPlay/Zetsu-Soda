@@ -116,14 +116,14 @@ export default function VendingMachine() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#050505]/80 to-[#050505]/95" />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12 items-start justify-center">
-        {/* Left Image Container */}
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start justify-center">
+        {/* Character Image Container */}
         <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="hidden lg:block sticky top-10 w-[380px] flex-shrink-0"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full lg:w-[380px] lg:sticky lg:top-10 flex-shrink-0"
         >
-          <div className="relative group overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 aspect-[4/5] shadow-2xl">
+          <div className="relative group overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 aspect-[4/5] lg:aspect-[4/5] shadow-2xl">
             <img 
               src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/6147295f35b54983a3fcde7478de7fab6938d33c127946a3ba916cf9888bdd2d.png" 
               alt="Zetsu Character" 

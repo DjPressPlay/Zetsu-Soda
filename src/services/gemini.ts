@@ -66,3 +66,22 @@ export async function remixSodaPrompt(currentPrompt: string) {
     return currentPrompt;
   }
 }
+
+export async function pourSodaPrompt(currentPrompt: string) {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `Expand the following AI component prompt into a much more detailed, professional, and feature-rich version. Add specific technical details, accessibility requirements, and advanced styling instructions.
+      
+      Current Prompt: ${currentPrompt}`,
+      config: {
+        systemInstruction: "You are a senior UI engineer. Your goal is to take a simple component prompt and 'pour' it into a highly detailed, production-ready specification.",
+      },
+    });
+
+    return response.text || currentPrompt;
+  } catch (error) {
+    console.error("Error pouring prompt:", error);
+    return currentPrompt;
+  }
+}

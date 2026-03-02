@@ -89,6 +89,13 @@ export const SodaCardExport = React.forwardRef<HTMLDivElement, SodaCardExportPro
                   <div className="text-white font-medium">Atomic A-01</div>
                 </div>
               </div>
+
+              <div className="pt-4 border-t border-white/5">
+                <div className="font-mono text-[9px] tracking-[0.1em] text-accent/60 uppercase mb-1">Atomic Integration</div>
+                <div className="text-[10px] text-white/40 font-mono leading-tight">
+                  Bring this prompt to life at <span className="text-accent">aistudio.google.com</span>
+                </div>
+              </div>
             </div>
           </div>
 
