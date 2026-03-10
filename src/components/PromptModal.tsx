@@ -101,16 +101,21 @@ export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating, 
     setIsDownloading(true);
     try {
       // Small delay to ensure styles are applied
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       const dataUrl = await toJpeg(exportRef.current, { 
         quality: 0.95,
         backgroundColor: '#050505',
         width: 1200,
         height: 630,
+        cacheBust: true,
+        includeQueryParams: true,
+        pixelRatio: 1,
         style: {
           transform: 'scale(1)',
-          transformOrigin: 'top left'
+          transformOrigin: 'top left',
+          visibility: 'visible',
+          display: 'flex'
         }
       });
 
@@ -417,7 +422,7 @@ export const PromptModal = ({ can, onClose, pregeneratedImage, isPregenerating, 
       </AnimatePresence>
 
       {/* Hidden Export Component */}
-      <div style={{ position: 'fixed', left: '-9999px', top: '-9999px', pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px', overflow: 'hidden', pointerEvents: 'none', opacity: 0, zIndex: -1 }}>
         {imageUrl && (
           <SodaCardExport 
             ref={exportRef}

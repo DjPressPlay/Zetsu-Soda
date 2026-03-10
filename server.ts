@@ -21,16 +21,53 @@ db.exec(`
     icon TEXT,
     imageUrl TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
+  );
+
+  CREATE TABLE IF NOT EXISTS generated_images (
+    cache_key TEXT PRIMARY KEY,
+    imageUrl TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json({ limit: '10mb' }));
+  app.use(express.json({ limit: '20mb' }));
 
   // API Routes
+  app.get("/api/images/:cacheKey", (req, res) => {
+    const { cacheKey } = req.params;
+    try {
+      const stmt = db.prepare("SELECT imageUrl FROM generated_images WHERE cache_key = ?");
+      const result = stmt.get(cacheKey) as { imageUrl: string } | undefined;
+      if (result) {
+        res.json({ imageUrl: result.imageUrl });
+      } else {
+        res.status(404).json({ error: "Image not found" });
+      }
+    } catch (error) {
+      console.error("Error retrieving image:", error);
+      res.status(500).json({ error: "Failed to retrieve image" });
+    }
+  });
+
+  app.post("/api/images", (req, res) => {
+    const { cacheKey, imageUrl } = req.body;
+    try {
+      const stmt = db.prepare(`
+        INSERT OR REPLACE INTO generated_images (cache_key, imageUrl)
+        VALUES (?, ?)
+      `);
+      stmt.run(cacheKey, imageUrl);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error saving image:", error);
+      res.status(500).json({ error: "Failed to save image" });
+    }
+  });
+
   app.post("/api/share", (req, res) => {
     const { name, category, prompt, rarity, icon, imageUrl } = req.body;
     const id = nanoid(10);

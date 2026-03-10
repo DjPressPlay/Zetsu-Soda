@@ -34,6 +34,7 @@ export const SodaCardExport = React.forwardRef<HTMLDivElement, SodaCardExportPro
               src={imageUrl} 
               alt={can.name}
               className="w-full h-full object-cover"
+              crossOrigin="anonymous"
               referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -54,6 +55,7 @@ export const SodaCardExport = React.forwardRef<HTMLDivElement, SodaCardExportPro
                 src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/fe37336d620b48e89ab983bb2f2611f2334f992500b64382b9b4aec650f9a531.png" 
                 alt="Zetsu Logo" 
                 className="absolute inset-0 w-full h-full object-contain opacity-10 pointer-events-none"
+                crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
               />
               <span className="relative z-10">{can.icon}</span>
